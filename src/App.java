@@ -107,7 +107,7 @@ public class App {
         System.out.println("Number of states loaded: " + data.length);
         System.out.println("Max total deaths: " + maxTotal);
         System.out.println("Min total deaths: " + minTotal);
-        System.out.println("Average total deaths: " + avgTotal);
+        System.out.println("Average state deaths: " + avgTotal);
         System.out.println("State with highest total deaths: " + maxState.getState() + " (" + maxState.getTotalDeaths() + ")");
         System.out.println("State with lowest total deaths: " + minState.getState() + " (" + minState.getTotalDeaths() + ")");
 
