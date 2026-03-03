@@ -94,26 +94,6 @@ classDiagram
 
 ---
 
-## 🐛 Known Bug (Fix Me!)
-
-There is a **NullPointerException** lurking in `StateViolenceData.java` like a raccoon in a dumpster. Both `StateMaxTotalDeaths` and `StateMinTotalDeaths` initialize their tracking variable to `null`, then immediately try to call `.getTotalDeaths()` on it inside the loop. Java will not appreciate this.
-
-**Broken:**
-```java
-StateViolenceData maxState = null;
-for (StateViolenceData s : data) {
-    if (s.getTotalDeaths() > maxState.getTotalDeaths()) { // 💥 NullPointerException
-```
-
-**Fixed:**
-```java
-StateViolenceData maxState = data[0]; // Start with the first entry, not nothing
-for (StateViolenceData s : data) {
-    if (s.getTotalDeaths() > maxState.getTotalDeaths()) { // ✅ Works great
-```
-
----
-
 ## Sample Output
 
 ```
