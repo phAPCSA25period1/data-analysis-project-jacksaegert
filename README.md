@@ -1,269 +1,111 @@
-[![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=22635588)
-# AP CSA Mini‑Project: Data Analysis with Arrays & File Input
-### Using CSV Files • Arrays of Objects • Algorithms • Data Ethics & Quality
+📊 State Violence Data Analysis
+"Fun with Spreadsheets and Existential Dread"
 
----
+Overview
+Welcome to the State Violence Data Analysis Mini-Project — where we take a perfectly cheerful dataset about gun deaths and drug overdoses and use it to practice Java. Nothing like mortality statistics to make you appreciate object-oriented programming!
+This project reads a CSV file of 2016 state-level data (sourced from the CDC, because nothing says "learning activity" like the CDC), parses it into objects, and performs basic statistical analysis. Think of it as Excel, but you had to build Excel yourself. From scratch. In Java.
 
-## 📌 Project Overview
-In this mini‑project, you will choose a dataset (CSV file), design a **custom class** to represent each row, read the dataset using the **Scanner** class, store all data as **objects** in an ArrayList or array, and answer a **guiding question** by analyzing the data.
+Project Structure
+project/
+├── App.java               ← The boss. Runs everything.
+├── StateViolenceData.java ← The data model. Holds all the sad numbers.
+└── ViolenceData.csv       ← The CSV. 52 rows of America doing its thing.
 
-This project reinforces:
+UML Diagram
+mermaidclassDiagram
+    class App {
+        +main(String[] args) void
+    }
 
-- Arrays & ArrayLists  
-- File input with `Scanner`  
-- Class design (attributes, constructors, methods)  
-- Algorithms (min, max, average, filtering)  
-- Data quality & ethics  
-- Documentation using **Javadoc**  
-- Creating a **UML class diagram**  
+    class StateViolenceData {
+        -String state
+        -int population
+        -int drugDeaths
+        -int gunDeaths
+        +StateViolenceData(String, int, int, int)
+        +getState() String
+        +getPopulation() int
+        +getDrugDeaths() int
+        +getGunDeaths() int
+        +getTotalDeaths() int
+        +toString() String
+        +MaxTotalDeaths(StateViolenceData[]) int$
+        +MinTotalDeaths(StateViolenceData[]) int$
+        +AverageTotalDeaths(StateViolenceData[]) double$
+        +StateMaxTotalDeaths(StateViolenceData[]) StateViolenceData$
+        +StateMinTotalDeaths(StateViolenceData[]) StateViolenceData$
+    }
 
-By the end, you will produce insights and answer your original question using your program.
+    App --> StateViolenceData : creates & analyzes
 
----
+$ denotes static methods. They don't need an object to run — they're independent. Living their best life.
 
-## 🎯 Your Task
-You will:
 
-1. **Choose a dataset** (teacher provided or public).  
-2. **Write a guiding question** for your dataset.  
-3. **Design a Java class** with ≥ 3 attributes.  
-4. **Use `Scanner` to read a CSV file**, parse rows, and construct objects.  
-5. **Store all objects** in an array or ArrayList.  
-6. **Analyze the dataset** using algorithms you create.  
-7. **Print insights** and answer your guiding question.  
-8. **Document your code** with Javadoc.  
-9. **Create a UML class diagram** representing your custom class.  
+Dataset
+File: ViolenceData.csv
+Source: CDC (Centers for Disease Control and Prevention), 2016
+Columns used:
+IndexColumnType0State nameString1Populationint4Firearm deaths (total)int6Drug overdose deaths (total)int
 
-Optional stretch challenges are included at the bottom!
+Puerto Rico's row is skipped automatically because its values are all -1. It's not a bug — Puerto Rico just really didn't want to participate in this particular spreadsheet.
 
----
 
-## 🧪 Example Questions You Might Ask
-Your dataset might allow you to answer things like:
+How It Works
 
-- *"Which Pokémon type has the highest average Attack?"*  
-- *"Which U.S. state had the lowest obesity rate in 2020?"*  
-- *"What country had the highest CO₂ emissions in 2000?"*  
-- *"What is the average HP for Fire-type Pokémon?"*  
+First pass through the CSV — counts how many valid rows exist so we know how big to make the array. (No ArrayLists allowed. We do things the hard way here.)
+Second pass — actually reads the data and fills the array with StateViolenceData objects.
+Analysis — calls static methods to find the min, max, and average total deaths across all states.
+Prints results — tells you which state had the most deaths, which had the fewest, and the average. A fun dinner party conversation starter.
 
-Think simple, clear, and answerable.
 
----
+Analysis Methods
+MethodWhat it doesMaxTotalDeaths(data[])Finds the highest total deaths across all statesMinTotalDeaths(data[])Finds the lowest total deaths across all statesAverageTotalDeaths(data[])Computes the mean total deathsStateMaxTotalDeaths(data[])Returns the state object with the most total deathsStateMinTotalDeaths(data[])Returns the state object with the fewest total deaths
 
-## 📁 Project Structure
-Your repository should follow this structure:
-```
-/src
-    Main.java
-    YourClass.java
-/data
-    your_dataset.csv
-README.md   ← this file
-UML_Diagram.png (or UML_Diagram.pdf)
-```
+🐛 Known Bug (Fix Me!)
+There is a NullPointerException lurking in StateViolenceData.java like a raccoon in a dumpster. Both StateMaxTotalDeaths and StateMinTotalDeaths initialize their tracking variable to null, then immediately try to call .getTotalDeaths() on it inside the loop. Java will not appreciate this.
+Broken:
+javaStateViolenceData maxState = null;
+for (StateViolenceData s : data) {
+    if (s.getTotalDeaths() > maxState.getTotalDeaths()) { // 💥 NullPointerException
+Fixed:
+javaStateViolenceData maxState = data[0]; // Start with the first entry, not nothing
+for (StateViolenceData s : data) {
+    if (s.getTotalDeaths() > maxState.getTotalDeaths()) { // ✅ Works great
 
----
+Sample Output
+Number of states loaded: 51
+Max total deaths: 7432
+Min total deaths: 147
+Average state deaths: 1402.8
+State with highest total deaths: California (7838)
+State with lowest total deaths: North Dakota (167)
+(Actual numbers will vary — go find out!)
 
-## 🧩 Step 1 — Choose Your Dataset
+How to Run
 
-**Dataset Name:**  
-**Source / Link:**  
+Make sure ViolenceData.csv is in the same directory as your compiled .class files (or update the file path in App.java).
+Compile:
 
-**What this dataset contains (2–3 sentences):**  
-____________________________________________________________________  
-____________________________________________________________________  
+bash   javac App.java StateViolenceData.java
 
----
+Run:
 
-## ❓ Step 2 — Write Your Guiding Question
+bash   java App
 
-Your guiding question should be something you can answer using your dataset.
+Marvel at the statistics. Reflect on life. Submit your assignment.
 
-**My guiding question:**  
-____________________________________________________________________  
-____________________________________________________________________  
 
-Examples:
+Guiding Question
 
-- "Which Pokémon has the highest HP?"  
-- "What is the average life expectancy in this dataset?"  
-- "Which state had the highest vaccination rate?"  
+"Do states with larger populations have proportionally more combined gun and drug deaths?"
 
----
+Short answer: mostly yes, with some notable exceptions (looking at you, West Virginia — 1.8M people, 52 drug overdose deaths per 100K). Population is a factor, but it's not the whole story. Culture, policy, and economics all play a role, which is way more nuanced than this README is qualified to cover.
 
-## 🧱 Step 3 — Design Your Class
+Credit
 
-You must create a class that represents **one row** of your dataset.
+Dataset: CDC.gov (2016)
+Project template: CS Plus Plus / GitHub Classroom
+Existential crisis: included at no extra charge
 
-### ✔ Your class must include:
 
-- **At least 3 private attributes**  
-- **A constructor** that takes all attributes as parameters  
-- **Getter methods** for attributes you plan to analyze  
-- **`toString()`** for easy printing  
-- Any additional analysis/helper methods as needed  
-
-### ✏ Include your class diagram
-
-
----
-
-## 📥 Step 4 — Read Your CSV File Using Scanner
-
-In `Main.java`, you must:
-
-- Create a `File` object  
-- Use `Scanner` to read the file  
-- Skip the header row (if needed)  
-- Read each line  
-- Split by commas using `.split(",")`  
-- Trim whitespace  
-- Parse numbers using `Integer.parseInt()` or `Double.parseDouble()`  
-- Construct objects  
-- Add them to an ArrayList or array  
-
-### Column → Attribute Map
-
-| Attribute Name | CSV Column Name | Column Index # | Notes |
-|----------------|------------------|----------------|-------|
-|                |                  |                |       |
-|                |                  |                |       |
-|                |                  |                |       |
-
----
-
-## 📊 Step 5 — Analyze Your Data
-
-You must write **at least two algorithms** to analyze your dataset.
-
-### Required: Choose 2 or more algorithms
-- [ ] Minimum value of attribute  
-- [ ] Maximum value of attribute  
-- [ ] Average of attribute  
-- [ ] Filter by category  
-- [ ] Count items matching a condition  
-
-**Algorithms I will implement:**
-
-1. __________________________________________  
-2. __________________________________________  
-
-Optional extras:  
-- Sorting  
-- Top/bottom N items  
-- Grouping by category  
-- Comparison between groups  
-
----
-
-## 🧠 Step 6 — Insights & Answer to Your Question
-
-After analyzing your objects, print:
-
-- ✔ How many rows were loaded  
-- ✔ Your algorithm results  
-- ✔ A clear answer to your guiding question  
-
-**My findings:**  
-____________________________________________________________________  
-____________________________________________________________________  
-____________________________________________________________________  
-
-**My answer to the guiding question:**  
-____________________________________________________________________  
-____________________________________________________________________  
-
----
-
-## 📝 Step 7 — Documentation Requirements
-
-### ✔ Javadoc Comments
-You MUST use Javadoc for:
-
-- Every **class**  
-- Every **method**  
-- Every **parameter**  
-- Every **return value**  
-
-Example:
-```java
-/**
- * Returns the highest HP among all Pokémon.
- * @param list the ArrayList of Pokémon objects
- * @return highest HP value in the dataset
- */
-public static int findMaxHP(ArrayList<Pokemon> list) {
-    // implementation
-}
-```
-
-### ✔ UML Class Diagram
-Add a UML diagram showing:
-
-- Class name
-- Attributes
-- Methods
-- Visibility (private/public)
-
-Save as `UML_Diagram.png` or `.pdf` in the repo.
-
----
-
-## 🛡 Step 8 — Data Ethics & Quality Reflection
-Write a short reflection (3–5 sentences):
-
-- What data-quality issues did you find?
-- Could your dataset be biased?
-- How might incomplete or inaccurate data affect results?
-- How trustworthy are your insights?
-
-**My reflection:**  
-____________________________________________________________________  
-____________________________________________________________________  
-____________________________________________________________________  
-____________________________________________________________________  
-
----
-
-## ⭐ Optional Challenges (Not Required but Fun!)
-
-### 🔹 User Input
-Allow the user to choose:
-
-- Which attribute to analyze
-- Which category to filter
-- What statistics they want to calculate
-
-### 🔹 Additional Algorithms
-
-- Sorting objects
-- Multiple comparisons
-- Generating summaries
-- Exporting results to a file
-
-### 🔹 Data Cleaning
-
-- Skip rows with missing values
-- Detect invalid entries
-- Normalize units
-
----
-
-## ✅ Submission Checklist
-
-- [ ] Dataset selected
-- [ ] Guiding question written
-- [ ] Class created with ≥3 attributes
-- [ ] File reading implemented
-- [ ] ArrayList/array of objects created
-- [ ] At least 2 analysis algorithms implemented
-- [ ] Findings printed
-- [ ] Javadoc comments added
-- [ ] UML diagram included
-- [ ] Reflection completed
-- [ ] Code compiles & runs
-
----
-
-Good luck, and have fun exploring your dataset! 🚀  
-You're now doing real data analysis — just like professional software engineers.
+Built with Java, Scanner, and the quiet knowledge that there are no ArrayLists allowed.
