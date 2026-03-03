@@ -120,7 +120,7 @@ public class StateViolenceData {
      * @return the StateViolenceData with max total deaths
      */
     public static StateViolenceData StateMaxTotalDeaths(StateViolenceData[] data) {
-        StateViolenceData maxState = null;
+        StateViolenceData maxState = data[0];
         for (StateViolenceData s : data) {
             if (s.getTotalDeaths() > maxState.getTotalDeaths()) {
                 maxState = s;
@@ -135,7 +135,7 @@ public class StateViolenceData {
      * @return the StateViolenceData with min total deaths
      */
     public static StateViolenceData StateMinTotalDeaths(StateViolenceData[] data) {
-        StateViolenceData minState = null;
+        StateViolenceData minState = data[0];
         for (StateViolenceData s : data) {
             if (s.getTotalDeaths() < minState.getTotalDeaths()) {
                 minState = s;
